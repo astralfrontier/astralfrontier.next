@@ -62,3 +62,18 @@ export async function getPostBySlug(
   const posts = await getPosts();
   return posts.find((post) => post.category == category && post.slug == slug);
 }
+
+export async function getPostsByCategory(
+  category: string
+): Promise<BlogPost[]> {
+  const posts = await getPosts();
+  return posts.filter((post) => post.category == category);
+}
+
+export function hrefOfCategory(category: BlogCategory): string {
+  return `/${category.slug}/`;
+}
+
+export function hrefOfPost(post: BlogPost): string {
+  return `/${post.category}/${post.slug}/`;
+}

@@ -1,26 +1,34 @@
-import { getCategoryBySlug, getPostBySlug, getPosts } from "@/lib";
+import {
+  getCategoryBySlug,
+  getPostBySlug,
+  getPosts,
+  hrefOfCategory,
+} from "@/lib";
 import { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export default async function PostPage(props: Params) {
   const params = await props.params;
   const post = await getPostBySlug(params.category, params.id);
 
   if (!post) {
-    // TODO: post not found
-    return;
+    notFound();
   }
 
   const category = await getCategoryBySlug(post?.category);
 
   if (!category) {
-    // TODO: category not found
-    return;
+    notFound();
   }
 
   return (
     <main>
       <h1>{post.title}</h1>
-      <p>Category is {category?.name}</p>
+      <p>
+        Category is{" "}
+        <Link href={hrefOfCategory(category)}>{category?.name}</Link>
+      </p>
     </main>
   );
 }

@@ -1,19 +1,34 @@
-import { getCategories, getCategoryBySlug } from "@/lib";
+import {
+  getCategories,
+  getCategoryBySlug,
+  getPostsByCategory,
+  hrefOfPost,
+} from "@/lib";
 import { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export default async function CategoryPage(props: Params) {
   const params = await props.params;
   const category = await getCategoryBySlug(params.category);
 
   if (!category) {
-    // TODO: category not found
-    return;
+    notFound();
   }
+
+  const posts = await getPostsByCategory(category.slug);
 
   return (
     <main>
       <h1>{category.name}</h1>
-      <p>Posts found in this category: TODO</p>
+      <p>Posts found in this category:</p>
+      <ul>
+        {posts.map((post) => (
+          <li key={post.slug}>
+            <Link href={hrefOfPost(post)}>{post.title}</Link>
+          </li>
+        ))}
+      </ul>
     </main>
   );
 }
@@ -28,7 +43,7 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
   const params = await props.params;
   const category = await getCategoryBySlug(params.category);
 
-  // TODO: category not found
+  // TODO: Category not found
 
   const title = `${category?.name}`;
 
