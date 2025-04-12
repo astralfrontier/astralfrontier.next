@@ -5,20 +5,23 @@ export default async function Post(props: Params) {
 
   return (
     <main>
-      <h1>{params.slug}</h1>
+      <h1>{params.id}</h1>
+      <p>Category is {params.category}</p>
     </main>
   );
 }
 
+// TODO: take this type from API definition
 type Params = {
   params: Promise<{
-    slug: string;
+    category: string;
+    id: string;
   }>;
 };
 
 export async function generateMetadata(props: Params): Promise<Metadata> {
   const params = await props.params;
-  const title = `${params.slug}`;
+  const title = `${params.id}`;
 
   return {
     title,
@@ -30,9 +33,10 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
 
 export async function generateStaticParams() {
   // TODO: get from API call
-  const posts = ["foo", "bar"];
+  const posts = [{ category: "blog", id: "post" }];
 
   return posts.map((post) => ({
-    slug: post,
+    category: post.category,
+    id: post.id,
   }));
 }
