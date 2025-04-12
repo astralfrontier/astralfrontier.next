@@ -1,17 +1,30 @@
+import { getCategoryBySlug, getPostBySlug, getPosts } from "@/lib";
 import { Metadata } from "next";
 
-export default async function Post(props: Params) {
+export default async function PostPage(props: Params) {
   const params = await props.params;
+  const post = await getPostBySlug(params.category, params.id);
+
+  if (!post) {
+    // TODO: post not found
+    return;
+  }
+
+  const category = await getCategoryBySlug(post?.category);
+
+  if (!category) {
+    // TODO: category not found
+    return;
+  }
 
   return (
     <main>
-      <h1>{params.id}</h1>
-      <p>Category is {params.category}</p>
+      <h1>{post.title}</h1>
+      <p>Category is {category?.name}</p>
     </main>
   );
 }
 
-// TODO: take this type from API definition
 type Params = {
   params: Promise<{
     category: string;
@@ -21,7 +34,10 @@ type Params = {
 
 export async function generateMetadata(props: Params): Promise<Metadata> {
   const params = await props.params;
-  const title = `${params.id}`;
+  const post = await getPostBySlug(params.category, params.id);
+  const title = `${post?.title}`;
+
+  // TODO: post not found
 
   return {
     title,
@@ -32,11 +48,10 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  // TODO: get from API call
-  const posts = [{ category: "blog", id: "post" }];
+  const posts = await getPosts();
 
   return posts.map((post) => ({
     category: post.category,
-    id: post.id,
+    id: post.slug,
   }));
 }
