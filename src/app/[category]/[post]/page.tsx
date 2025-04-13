@@ -29,7 +29,10 @@ export default async function PostPage(props: Params) {
         Category is{" "}
         <Link href={hrefOfCategory(category)}>{category?.name}</Link>
       </p>
-      <pre>{JSON.stringify(post.contents, null, 2)}</pre>
+      <h2>Data</h2>
+      <pre>{JSON.stringify(post.data, null, 2)}</pre>
+      <h2>Content</h2>
+      <pre>{JSON.stringify(post.content, null, 2)}</pre>
     </main>
   );
 }

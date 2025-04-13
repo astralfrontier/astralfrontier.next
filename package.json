@@ -23,6 +23,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.0",
     "glob": "^11.0.1",
+    "gray-matter": "^4.0.3",
     "sass": "^1.86.3",
     "typescript": "^5"
   }
