@@ -1,11 +1,20 @@
+import { getPosts, hrefOfPost } from "@/lib";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const posts = await getPosts();
+
   return (
     <div>
       <main>
         <h1>Home</h1>
-        <Link href="/my-category/my-post/">Sample Post</Link>
+        <ul>
+          {posts.map((post) => (
+            <li key={`${post.category}-${post.slug}`}>
+              <Link href={hrefOfPost(post)}>{post.title}</Link>
+            </li>
+          ))}
+        </ul>
       </main>
     </div>
   );
