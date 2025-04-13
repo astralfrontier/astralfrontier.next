@@ -10,7 +10,7 @@ import { notFound } from "next/navigation";
 
 export default async function PostPage(props: Params) {
   const params = await props.params;
-  const post = await getPostBySlug(params.category, params.id);
+  const post = await getPostBySlug(params.category, params.post);
 
   if (!post) {
     notFound();
@@ -29,6 +29,7 @@ export default async function PostPage(props: Params) {
         Category is{" "}
         <Link href={hrefOfCategory(category)}>{category?.name}</Link>
       </p>
+      <pre>{JSON.stringify(post.contents, null, 2)}</pre>
     </main>
   );
 }
@@ -36,17 +37,16 @@ export default async function PostPage(props: Params) {
 type Params = {
   params: Promise<{
     category: string;
-    id: string;
+    post: string;
   }>;
 };
 
 export async function generateMetadata(props: Params): Promise<Metadata> {
   const params = await props.params;
-  const post = await getPostBySlug(params.category, params.id);
+  const post = await getPostBySlug(params.category, params.post);
+
+  // TODO other metadata
   const title = `${post?.title}`;
-
-  // TODO: post not found
-
   return {
     title,
     openGraph: {
@@ -60,6 +60,6 @@ export async function generateStaticParams() {
 
   return posts.map((post) => ({
     category: post.category,
-    id: post.slug,
+    post: post.slug,
   }));
 }
